@@ -1,39 +1,18 @@
 ## wordcount.py
 
-import argparse
-import os
 
-
-def parse_args():
-
-    parser = argparse.ArgumentParser(description="Count words in files.")
-
-    parser.add_argument(
-        "input",
-        type=str,
-        help="Path to the input folder containing files to process",
-    )
-    parser.add_argument(
-        "output",
-        type=str,
-        help="Path to the output folder for results",
-    )
-
-    parsed_args = parser.parse_args()
-
-    return parsed_args.input, parsed_args.output
-
-
-def read_all_lines(input_folder):
-    lines = []
-    for filename in os.listdir(input_folder):
-        file_path = os.path.join(input_folder, filename)
-        with open(file_path, "r", encoding="utf-8") as f:
-            lines.extend(f.readlines())
-    return lines
+from homework.src._internals.count_words import count_words
+from homework.src._internals.parse_args import parse_args
+from homework.src._internals.preprocess_lines import preprocess_lines
+from homework.src._internals.read_all_lines import read_all_lines
+from homework.src._internals.split_into_words import split_into_words
+from homework.src._internals.write_word_counts import write_word_counts
 
 
 def main():
     input_folder, output_folder = parse_args()
-
     lines = read_all_lines(input_folder)
+    preprocessed_lines = preprocess_lines(lines)
+    words = split_into_words(preprocessed_lines)
+    word_counts = count_words(words)
+    write_word_counts(output_folder, word_counts)
